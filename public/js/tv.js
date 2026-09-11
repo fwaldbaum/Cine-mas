@@ -18,7 +18,8 @@
     clockTime: document.getElementById('clockTime'),
     clockDate: document.getElementById('clockDate'),
     video: document.getElementById('remoteVideo'),
-    sharingBadge: document.getElementById('sharingBadge')
+    sharingBadge: document.getElementById('sharingBadge'),
+    aviso: document.getElementById('aviso')
   };
 
   var platforms = window.PLATFORMS.list;
@@ -437,9 +438,26 @@
     localStorage.setItem('cinemas.modoApertura', modo === 'ventana' ? 'pestana' : 'ventana');
     abrirAjustes();
   }
+  var avisoTimer = null;
+  function aviso(texto) {
+    el.aviso.textContent = texto;
+    el.aviso.hidden = false;
+    clearTimeout(avisoTimer);
+    avisoTimer = setTimeout(function () { el.aviso.hidden = true; }, 6000);
+  }
+
   function pantallaCompleta() {
-    if (document.fullscreenElement) document.exitFullscreen();
-    else document.documentElement.requestFullscreen().catch(function () {});
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function () {});
+      return;
+    }
+    var intento = document.documentElement.requestFullscreen();
+    if (intento && intento.catch) {
+      // El navegador exige que la orden salga de la propia tele, no del celular.
+      intento.catch(function () {
+        aviso('Para poner pantalla completa pulsa la tecla F en el equipo del cine.');
+      });
+    }
   }
 
   /* ---------------- Cabecera ---------------- */

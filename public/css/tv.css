@@ -326,6 +326,15 @@ video#remoteVideo[hidden] { display: none; }
   transition: opacity 0.4s;
 }
 .sharing-badge[hidden] { display: none; }
+#aviso {
+  top: auto;
+  bottom: clamp(46px, 7vh, 90px);
+  background: rgba(20, 16, 4, 0.92);
+  border-color: rgba(245, 196, 81, 0.45);
+  color: #ffe3a3;
+  font-size: clamp(12px, 1vw, 18px);
+  z-index: 70;
+}
 
 .countdown {
   display: flex;

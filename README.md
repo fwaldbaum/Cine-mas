@@ -97,6 +97,12 @@ CINEMAS_TV_HOSTS='*' node server.js            # cualquier equipo de tu red
 Están en `public/js/platforms.js`, en el campo `url` de cada una. Ahí también puedes
 cambiar el nombre, el logo o el color de cada tarjeta.
 
+### Pantalla completa
+
+El botón *Pantalla* del celular solo funciona si el navegador del televisor lo permite.
+Casi todos exigen que la orden salga del propio equipo, así que lo seguro es pulsar la
+tecla `F` en el teclado del cine. Si el navegador la rechaza, la tele lo avisa en pantalla.
+
 ### Ventanas emergentes
 
 Al elegir una plataforma, CINE-MÁS intenta abrirla en una ventana nueva para seguir

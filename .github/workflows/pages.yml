@@ -1,0 +1,40 @@
+name: Publicar CINE-MÁS en GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.desplegar.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Preparar Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      # La carpeta public/ es el sitio: sin servidor funciona en "modo web",
+      # con teclado y ratón, sin control desde el celular.
+      - name: Empaquetar el sitio
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Desplegar
+        id: desplegar
+        uses: actions/deploy-pages@v4

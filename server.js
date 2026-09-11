@@ -16,8 +16,13 @@ const os = require('os');
 const path = require('path');
 const crypto = require('crypto');
 
+const { spawn } = require('child_process');
+
 const ws = require('./lib/ws');
 const selfsigned = require('./lib/selfsigned');
+
+// Con --abrir (o CINEMAS_ABRIR=1) se abre solo el navegador en la tele.
+const ABRIR_NAVEGADOR = process.argv.includes('--abrir') || process.env.CINEMAS_ABRIR === '1';
 
 const ROOT = __dirname;
 const PUBLIC_DIR = path.join(ROOT, 'public');
@@ -391,6 +396,23 @@ function banner(primary, addresses) {
   console.log(line);
   console.log('  Abre el televisor en pantalla completa y escanea el QR.');
   console.log('  Para detener: Ctrl+C\n');
+  if (ABRIR_NAVEGADOR) abrirNavegador('http://localhost:' + HTTP_PORT + '/');
+}
+
+function abrirNavegador(url) {
+  const ordenes = {
+    darwin: ['open', [url]],
+    win32: ['cmd', ['/c', 'start', '', url]],
+    linux: ['xdg-open', [url]]
+  };
+  const orden = ordenes[process.platform] || ordenes.linux;
+  try {
+    const hijo = spawn(orden[0], orden[1], { stdio: 'ignore', detached: true });
+    hijo.on('error', () => console.log('  (abre tú mismo ' + url + ')'));
+    hijo.unref();
+  } catch (err) {
+    console.log('  (abre tú mismo ' + url + ')');
+  }
 }
 
 process.on('SIGINT', () => { console.log('\n  Hasta luego.\n'); process.exit(0); });

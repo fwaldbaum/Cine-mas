@@ -1,0 +1,1058 @@
+<title>CINE-MÁS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;700;800&display=swap">
+<style>
+  :root {
+    --sala: #05060a;
+    --sala-alta: #0c0e16;
+    --panel: rgba(255, 255, 255, 0.065);
+    --borde: rgba(255, 255, 255, 0.13);
+    --borde-vivo: rgba(255, 255, 255, 0.32);
+    --tinta: #f2f4fa;
+    --tinta-baja: rgba(242, 244, 250, 0.6);
+    --marquesina: #f5c451;
+    --telon: #e50914;
+    --seeke: #22d3ee;
+    --verde: #35d07f;
+    --display: 'Bebas Neue', 'Haettenschweiler', 'Arial Narrow', sans-serif;
+    --texto: 'Manrope', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(1100px 620px at 50% -12%, rgba(229, 9, 20, 0.17), transparent 62%),
+      radial-gradient(860px 560px at 102% 108%, rgba(34, 211, 238, 0.12), transparent 62%),
+      var(--sala);
+    color: var(--tinta);
+    font-family: var(--texto);
+    -webkit-font-smoothing: antialiased;
+  }
+  .oculto { display: none !important; }
+  kbd {
+    display: inline-block; min-width: 1.7em; text-align: center;
+    padding: 2px 6px; border-radius: 6px;
+    border: 1px solid var(--borde); background: var(--panel);
+    font-family: inherit; font-size: 0.9em; color: var(--tinta);
+  }
+  :focus-visible { outline: 3px solid var(--marquesina); outline-offset: 3px; }
+
+  /* ---------------- Pantalla del televisor ---------------- */
+  #tele {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(10px, 1.6vh, 22px);
+    padding: clamp(14px, 2.2vh, 30px) clamp(16px, 2.6vw, 52px);
+    overflow: hidden;
+  }
+
+  .rail {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px; flex: 0 0 auto;
+  }
+  .marca { display: flex; align-items: center; gap: clamp(10px, 1vw, 18px); }
+  .marca svg { width: clamp(36px, 3.2vw, 60px); height: auto; flex: none; }
+  .marca h1 {
+    margin: 0;
+    font-family: var(--display);
+    font-size: clamp(34px, 4vw, 76px);
+    font-weight: 400;
+    letter-spacing: clamp(2px, 0.3vw, 6px);
+    line-height: 0.92;
+    white-space: nowrap;
+    background: linear-gradient(96deg, #fff 4%, var(--marquesina) 52%, var(--telon) 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .marca .lema {
+    display: block; margin-top: 2px;
+    font-size: clamp(9px, 0.68vw, 13px);
+    letter-spacing: 0.34em; font-weight: 700;
+    color: var(--tinta-baja);
+  }
+
+  .rail-fin { display: flex; align-items: center; gap: clamp(12px, 1.3vw, 24px); }
+  .reloj {
+    text-align: right; line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+    color: var(--tinta-baja);
+  }
+  .reloj b { display: block; font-size: clamp(19px, 1.9vw, 34px); font-weight: 700; color: var(--tinta); }
+  .reloj span { font-size: clamp(9px, 0.7vw, 13px); letter-spacing: 0.16em; text-transform: uppercase; }
+
+  .ficha-control {
+    display: flex; align-items: center; gap: clamp(10px, 1vw, 18px);
+    background: var(--panel); border: 1px solid var(--borde);
+    border-radius: 20px; padding: clamp(9px, 1vh, 15px) clamp(12px, 1.1vw, 20px);
+    cursor: pointer; text-align: left; color: inherit; font: inherit;
+    transition: border-color 0.2s;
+  }
+  .ficha-control:hover { border-color: var(--borde-vivo); }
+  .ficha-control .ficha-texto { display: block; min-width: 0; }
+  .ficha-control .qr {
+    width: clamp(76px, 7vw, 124px); height: clamp(76px, 7vw, 124px);
+    background: #fff; border-radius: 9px; padding: 5px; flex: none; display: flex;
+  }
+  .ficha-control .qr svg { width: 100%; height: 100%; display: block; }
+  .ficha-control h2 { margin: 0 0 4px; font-size: clamp(11px, 0.92vw, 17px); font-weight: 800; }
+  .ficha-control .donde {
+    display: block; font-size: clamp(9px, 0.75vw, 14px); color: var(--tinta-baja);
+    max-width: 26ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .ficha-control .clave { display: block; margin-top: 5px; font-size: clamp(9px, 0.74vw, 14px); color: var(--tinta-baja); }
+  .ficha-control .clave b {
+    color: var(--marquesina); font-size: 1.55em; letter-spacing: 0.2em;
+    font-variant-numeric: tabular-nums; margin-left: 4px;
+  }
+
+  .cartelera {
+    flex: 1 1 auto; min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: clamp(12px, 1.4vw, 28px);
+  }
+  .titulo {
+    position: relative; min-height: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: clamp(6px, 1vh, 15px);
+    padding: clamp(10px, 1.6vh, 26px);
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    border-radius: clamp(15px, 1.5vw, 28px);
+    background: var(--sala-alta);
+    text-decoration: none; color: inherit; cursor: pointer;
+    transition: transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.2), border-color 0.22s, box-shadow 0.22s;
+  }
+  .titulo::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(180deg, transparent 56%, rgba(0, 0, 0, 0.42) 100%);
+  }
+  .titulo .marca-logo { flex: 1 1 auto; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; }
+  .titulo img { max-height: 100%; object-fit: contain; filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.55)); transition: transform 0.22s; }
+  .titulo .pie { text-align: center; z-index: 1; }
+  .titulo .nombre { display: block; font-size: clamp(13px, 1.15vw, 23px); font-weight: 800; letter-spacing: 0.03em; }
+  .titulo .genero { display: block; font-size: clamp(9px, 0.72vw, 14px); color: var(--tinta-baja); margin-top: 2px; }
+  .titulo.foco {
+    transform: scale(1.045);
+    border-color: var(--acento);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.07), 0 24px 62px -20px var(--acento), 0 0 90px -32px var(--acento);
+    z-index: 2;
+  }
+  .titulo.foco img { transform: scale(1.05); }
+  .etiqueta {
+    position: absolute; top: clamp(8px, 1vh, 15px); right: clamp(8px, 1vh, 15px); z-index: 2;
+    font-size: clamp(8px, 0.6vw, 11px); font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 5px 10px; border-radius: 999px;
+    background: rgba(0, 0, 0, 0.42); border: 1px solid var(--borde); color: var(--tinta-baja);
+  }
+
+  .pistas {
+    flex: 0 0 auto; display: flex; align-items: center; gap: clamp(9px, 1.3vw, 24px);
+    flex-wrap: wrap; font-size: clamp(10px, 0.78vw, 14px); color: var(--tinta-baja);
+  }
+  .pistas .hueco { flex: 1 1 auto; }
+  .senal { display: inline-flex; align-items: center; gap: 8px; }
+  .bombilla { width: 9px; height: 9px; border-radius: 50%; background: #6b7280; }
+  .bombilla.viva { background: var(--verde); box-shadow: 0 0 10px rgba(53, 208, 127, 0.85); }
+
+  /* ---------------- Capas ---------------- */
+  .capa {
+    position: fixed; inset: 0; z-index: 40;
+    background: rgba(4, 5, 9, 0.94);
+    display: flex; align-items: center; justify-content: center;
+    padding: clamp(16px, 3vh, 46px);
+  }
+  .lamina {
+    width: min(1120px, 94vw); max-height: 92vh; overflow: auto;
+    background: linear-gradient(162deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
+    border: 1px solid var(--borde);
+    border-radius: clamp(18px, 1.9vw, 32px);
+    padding: clamp(20px, 3vh, 42px);
+  }
+  .lamina h2 {
+    margin: 0 0 10px; font-family: var(--display); font-weight: 400;
+    font-size: clamp(28px, 3vw, 52px); letter-spacing: 0.02em; text-wrap: balance;
+  }
+  .lamina p { margin: 0 0 12px; color: var(--tinta-baja); font-size: clamp(12.5px, 1vw, 18px); line-height: 1.6; max-width: 68ch; }
+  .lamina .logo-alto { height: clamp(44px, 5.5vw, 96px); margin-bottom: clamp(10px, 2vh, 22px); }
+
+  .dos-columnas { display: grid; grid-template-columns: minmax(220px, 36%) 1fr; gap: clamp(18px, 2.3vw, 42px); align-items: center; }
+  .qr-grande { background: #fff; border-radius: 16px; padding: clamp(9px, 1.1vw, 18px); aspect-ratio: 1 / 1; display: flex; max-width: 100%; }
+  .qr-grande svg { width: 100%; height: 100%; display: block; }
+  .qr-pie { margin-top: 10px; font-size: clamp(9.5px, 0.8vw, 14px); color: var(--tinta-baja); text-align: center; word-break: break-all; }
+  ol.pasos { margin: 0; padding-left: 1.2em; color: var(--tinta-baja); font-size: clamp(12.5px, 1vw, 18px); line-height: 1.8; }
+  ol.pasos strong { color: var(--tinta); }
+
+  .botonera { display: flex; gap: 11px; flex-wrap: wrap; margin-top: clamp(14px, 2vh, 24px); }
+  .boton {
+    font: inherit; font-weight: 700; font-size: clamp(12px, 0.95vw, 17px);
+    padding: 12px 22px; border-radius: 13px; cursor: pointer;
+    border: 1px solid var(--borde); background: var(--panel); color: var(--tinta);
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .boton:hover { background: rgba(255, 255, 255, 0.13); border-color: var(--borde-vivo); }
+  .boton.destacado { background: var(--marquesina); color: #1a1405; border-color: transparent; }
+  .boton.destacado:hover { background: #ffd977; }
+
+  .nota {
+    margin-top: 14px; padding: 13px 17px; border-radius: 13px;
+    border: 1px solid rgba(245, 196, 81, 0.36); background: rgba(245, 196, 81, 0.08);
+    color: #ffe4a6; font-size: clamp(11.5px, 0.88vw, 16px); line-height: 1.6;
+  }
+  .nota.buena { border-color: rgba(53, 208, 127, 0.45); background: rgba(53, 208, 127, 0.09); color: #b9f3d4; }
+
+  .lista-ajustes { display: grid; gap: 12px; margin-top: 16px; }
+  .ajuste {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    padding: 13px 17px; border-radius: 13px;
+    background: rgba(255, 255, 255, 0.04); border: 1px solid var(--borde);
+    font-size: clamp(12px, 0.92vw, 17px);
+  }
+  .ajuste .dato { color: var(--tinta-baja); font-variant-numeric: tabular-nums; }
+
+  .campo {
+    width: 100%; font: inherit; font-size: 16px;
+    padding: 13px 15px; border-radius: 13px; margin-bottom: 10px;
+    border: 1px solid var(--borde); background: rgba(0, 0, 0, 0.35); color: var(--tinta);
+  }
+  .campo:focus { outline: none; border-color: var(--marquesina); }
+
+  .aro {
+    width: clamp(50px, 4.4vw, 84px); height: clamp(50px, 4.4vw, 84px); flex: none;
+    border-radius: 50%; border: 4px solid rgba(255, 255, 255, 0.15);
+    border-top-color: var(--acento, #fff); animation: giro 1s linear infinite;
+  }
+  @keyframes giro { to { transform: rotate(360deg); } }
+  .cuenta { display: flex; align-items: center; gap: clamp(13px, 1.8vw, 26px); margin-top: clamp(12px, 2vh, 22px); }
+
+  #aviso {
+    position: fixed; left: 50%; bottom: clamp(44px, 7vh, 86px); transform: translateX(-50%);
+    z-index: 60; max-width: min(92vw, 640px); text-align: center;
+    background: rgba(21, 17, 5, 0.95); border: 1px solid rgba(245, 196, 81, 0.45);
+    color: #ffe4a6; border-radius: 999px; padding: 10px 22px;
+    font-size: clamp(12px, 0.92vw, 16px);
+  }
+
+  /* ---------------- Control del celular ---------------- */
+  #control {
+    min-height: 100vh;
+    padding: max(14px, env(safe-area-inset-top)) 14px max(20px, env(safe-area-inset-bottom));
+  }
+  .envoltorio { max-width: 520px; margin: 0 auto; display: grid; gap: 13px; }
+  .cabecera-movil { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 2px; }
+  .cabecera-movil .marca h1 { font-size: 30px; letter-spacing: 2px; }
+  .cabecera-movil .marca svg { width: 26px; }
+  .tarjeta { background: var(--panel); border: 1px solid var(--borde); border-radius: 19px; padding: 17px; }
+  .tarjeta h2 { margin: 0 0 5px; font-size: 16.5px; font-weight: 800; }
+  .tarjeta p { margin: 0 0 13px; color: var(--tinta-baja); font-size: 13.5px; line-height: 1.55; }
+
+  .clave-campo {
+    width: 100%; font-family: var(--texto); font-size: 38px; font-weight: 700;
+    letter-spacing: 15px; text-align: center; padding: 15px 0 15px 15px;
+    border-radius: 15px; border: 2px solid var(--borde);
+    background: rgba(0, 0, 0, 0.35); color: var(--tinta);
+    font-variant-numeric: tabular-nums;
+  }
+  .clave-campo:focus { outline: none; border-color: var(--marquesina); }
+  .recado { font-size: 13.5px; margin-top: 9px; min-height: 18px; color: var(--tinta-baja); }
+  .recado.malo { color: #ff9ca0; }
+  .recado.bien { color: #b9f3d4; }
+
+  .btn {
+    display: block; width: 100%; font: inherit; font-weight: 700; font-size: 16px;
+    padding: 15px; border-radius: 14px; cursor: pointer;
+    border: 1px solid var(--borde); background: var(--panel); color: var(--tinta);
+    transition: transform 0.08s, background 0.15s;
+  }
+  .btn:active { transform: scale(0.975); }
+  .btn.destacado { background: var(--marquesina); color: #1a1405; border-color: transparent; }
+
+  .rejilla-movil { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+  .chapa {
+    border: 1px solid var(--borde); border-radius: 15px; cursor: pointer;
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+    color: var(--tinta); padding: 11px 5px 8px;
+    display: flex; flex-direction: column; align-items: center; gap: 7px;
+    transition: transform 0.08s, border-color 0.2s, box-shadow 0.2s;
+  }
+  .chapa:active { transform: scale(0.96); }
+  .chapa img { height: 28px; max-width: 84%; object-fit: contain; }
+  .chapa span { font-size: 11px; opacity: 0.78; text-align: center; line-height: 1.25; }
+  .chapa.puesta { border-color: var(--acento); box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.09), 0 10px 26px -14px var(--acento); }
+  .chapa.puesta span { opacity: 1; }
+
+  .cruceta {
+    position: relative; width: min(72vw, 280px); aspect-ratio: 1/1; margin: 2px auto 12px;
+    border-radius: 50%; border: 1px solid var(--borde);
+    background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.025));
+    display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);
+  }
+  .cruceta button {
+    border: none; background: transparent; color: var(--tinta); font: inherit; font-size: 25px;
+    display: flex; align-items: center; justify-content: center; border-radius: 14px; cursor: pointer;
+  }
+  .cruceta button:active { background: rgba(255, 255, 255, 0.12); }
+  .cruceta .arr { grid-area: 1/2; } .cruceta .izq { grid-area: 2/1; }
+  .cruceta .der { grid-area: 2/3; } .cruceta .aba { grid-area: 3/2; }
+  .cruceta .ok {
+    grid-area: 2/2; margin: 8px; border-radius: 50%;
+    background: var(--marquesina); color: #1a1405; font-size: 17px; font-weight: 800; letter-spacing: 1px;
+    box-shadow: 0 10px 26px -12px rgba(245, 196, 81, 0.9);
+  }
+  .fila { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+  .fila.tres { grid-template-columns: repeat(3, 1fr); }
+  .ahora {
+    display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+    border-radius: 15px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--borde);
+  }
+  .ahora img { height: 23px; max-width: 108px; object-fit: contain; }
+  .ahora b { display: block; font-size: 15px; }
+  .ahora span { font-size: 12.5px; color: var(--tinta-baja); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+  @media (max-width: 760px) {
+    .cartelera { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(3, 1fr); }
+    .rail { flex-direction: column; align-items: stretch; }
+    .reloj { display: none; }
+    .dos-columnas { grid-template-columns: 1fr; }
+  }
+</style>
+
+<!-- ===================== PANTALLA DEL TELEVISOR ===================== -->
+<div id="tele" class="oculto">
+  <header class="rail">
+    <div class="marca">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <rect x="3" y="16" width="42" height="32" rx="7" fill="#f5c451"></rect>
+        <rect x="9" y="22" width="8" height="8" rx="2" fill="#05060a"></rect>
+        <rect x="9" y="34" width="8" height="8" rx="2" fill="#05060a"></rect>
+        <rect x="31" y="22" width="8" height="8" rx="2" fill="#05060a"></rect>
+        <rect x="31" y="34" width="8" height="8" rx="2" fill="#05060a"></rect>
+        <path d="M45 32 L61 22 V42 Z" fill="#e50914"></path>
+      </svg>
+      <div>
+        <h1>CINE-MÁS</h1>
+        <span class="lema">TU CINE EN CASA</span>
+      </div>
+    </div>
+    <div class="rail-fin">
+      <div class="reloj"><b id="hora">--:--</b><span id="fecha"></span></div>
+      <button class="ficha-control" id="fichaControl" type="button">
+        <span class="qr" id="qrControl"></span>
+        <span class="ficha-texto">
+          <h2>Controla desde tu celular</h2>
+          <span class="donde" id="dondeControl">escanea este código</span>
+          <span class="clave">Contraseña <b id="claveTele">····</b></span>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <main class="cartelera" id="cartelera"></main>
+
+  <footer class="pistas">
+    <span><kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd><kbd>↓</kbd> Moverse</span>
+    <span><kbd>Enter</kbd> Abrir</span>
+    <span><kbd>Esc</kbd> Volver</span>
+    <span><kbd>F</kbd> Pantalla completa</span>
+    <span><kbd>S</kbd> Ajustes</span>
+    <span class="hueco"></span>
+    <span class="senal"><span class="bombilla" id="bombilla"></span><span id="senalTexto">sala lista</span></span>
+  </footer>
+</div>
+
+<div class="capa oculto" id="capa"><div class="lamina" id="lamina"></div></div>
+<div id="aviso" class="oculto"></div>
+
+<!-- ===================== CONTROL DEL CELULAR ===================== -->
+<div id="control" class="oculto">
+  <div class="envoltorio">
+    <header class="cabecera-movil">
+      <div class="marca">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <rect x="3" y="16" width="42" height="32" rx="7" fill="#f5c451"></rect>
+          <rect x="9" y="22" width="8" height="8" rx="2" fill="#05060a"></rect>
+          <rect x="9" y="34" width="8" height="8" rx="2" fill="#05060a"></rect>
+          <rect x="31" y="22" width="8" height="8" rx="2" fill="#05060a"></rect>
+          <rect x="31" y="34" width="8" height="8" rx="2" fill="#05060a"></rect>
+          <path d="M45 32 L61 22 V42 Z" fill="#e50914"></path>
+        </svg>
+        <h1>CINE-MÁS</h1>
+      </div>
+      <span style="display:flex;align-items:center;gap:10px">
+        <span class="senal"><span class="bombilla" id="bombillaMovil"></span><span id="senalMovil">conectando…</span></span>
+        <button class="boton" id="usarComoPantalla" type="button" style="padding:7px 12px;font-size:12px">Ver menú</button>
+      </span>
+    </header>
+
+    <section class="tarjeta" id="acceso">
+      <h2>Contraseña</h2>
+      <p>Escribe los cuatro números que aparecen en la pantalla del televisor.</p>
+      <input id="clave" class="clave-campo" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="one-time-code" placeholder="····">
+      <div class="recado" id="recadoClave"></div>
+      <button class="btn destacado" id="entrar" style="margin-top:6px">Entrar</button>
+    </section>
+
+    <section id="mando" class="oculto" style="display:grid;gap:13px">
+      <div class="ahora">
+        <img id="ahoraLogo" src="img/seeke.svg" alt="">
+        <div><b id="ahoraNombre">CINE-MÁS</b><span id="ahoraDetalle">en el menú principal</span></div>
+      </div>
+
+      <div class="tarjeta">
+        <h2>Plataformas</h2>
+        <p>Toca una para abrirla en la tele.</p>
+        <div class="rejilla-movil" id="chapas"></div>
+      </div>
+
+      <div class="tarjeta">
+        <h2>Mando</h2>
+        <div class="cruceta">
+          <button class="arr" data-orden="arriba" aria-label="Arriba">▲</button>
+          <button class="izq" data-orden="izquierda" aria-label="Izquierda">◀</button>
+          <button class="ok" data-orden="ok">OK</button>
+          <button class="der" data-orden="derecha" aria-label="Derecha">▶</button>
+          <button class="aba" data-orden="abajo" aria-label="Abajo">▼</button>
+        </div>
+        <div class="fila tres">
+          <button class="btn" data-orden="atras">Atrás</button>
+          <button class="btn" data-orden="inicio">Inicio</button>
+          <button class="btn" data-orden="ajustes">Ajustes</button>
+        </div>
+      </div>
+
+      <div class="tarjeta">
+        <h2>Enviar un enlace a la tele</h2>
+        <p>Pega la dirección de Seeke o de cualquier página y se abrirá en el televisor.</p>
+        <input id="enlace" class="campo" type="url" inputmode="url" placeholder="https://…" autocomplete="off">
+        <button class="btn" id="enviarEnlace">Abrir en la tele</button>
+        <div class="recado" id="recadoEnlace"></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script src="qr.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* La dirección pública de esta página; se rellena al publicarla. */
+  var DIRECCION = 'https://claude.ai/code/artifact/b341cf93-9cd5-49a3-8a52-9b82c8b7b4c9';
+
+  var PLATAFORMAS = [
+    { id: 'netflix', nombre: 'Netflix', genero: 'Series y películas', url: 'https://www.netflix.com',
+      logo: 'img/netflix.svg', acento: '#e50914', escala: 74,
+      fondo: 'radial-gradient(circle at 30% 20%, #3a0a0e 0%, #120507 70%)' },
+    { id: 'disney', nombre: 'Disney+', genero: 'Disney, Pixar, Marvel', url: 'https://www.disneyplus.com',
+      logo: 'img/disney-plus.svg', acento: '#3fb8e6', escala: 78, filtro: 'brightness(1.16) saturate(1.15)',
+      fondo: 'radial-gradient(circle at 30% 20%, #123a63 0%, #06121f 70%)' },
+    { id: 'hbomax', nombre: 'HBO Max', genero: 'HBO, Warner y DC', url: 'https://www.hbomax.com',
+      logo: 'img/hbo-max.svg', acento: '#8b5cf6', escala: 62,
+      fondo: 'radial-gradient(circle at 30% 20%, #2a1657 0%, #0b0718 70%)' },
+    { id: 'prime', nombre: 'Prime Video', genero: 'Amazon Prime Video', url: 'https://www.primevideo.com',
+      logo: 'img/prime-video.svg', acento: '#00a8e1', escala: 80,
+      fondo: 'radial-gradient(circle at 30% 20%, #0b3550 0%, #04121c 70%)' },
+    { id: 'youtube', nombre: 'YouTube', genero: 'Vídeos y directos', url: 'https://www.youtube.com',
+      logo: 'img/youtube.svg', acento: '#ff0033', escala: 46,
+      fondo: 'radial-gradient(circle at 30% 20%, #3d0510 0%, #140205 70%)' },
+    { id: 'seeke', nombre: 'Seeke', genero: 'Envía tu enlace a la tele', accion: 'seeke',
+      logo: 'img/seeke.svg', acento: '#22d3ee', escala: 72,
+      fondo: 'radial-gradient(circle at 30% 20%, #0c3f46 0%, #04161a 70%)' }
+  ];
+
+  var COLUMNAS = 3;
+
+  /* Qué papel juega este dispositivo. El ancla #control puede perderse al
+     abrir la página, así que un celular se reconoce solo y siempre se puede
+     cambiar a mano. */
+  function papelGuardado() {
+    try { return localStorage.getItem('cinemas.papel'); } catch (e) { return null; }
+  }
+  function fijarPapel(papel) {
+    try { localStorage.setItem('cinemas.papel', papel); } catch (e) {}
+    location.reload();
+  }
+  function pareceCelular() {
+    var tacto = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+    return Boolean(tacto) && Math.min(window.innerWidth, window.innerHeight) < 820;
+  }
+  var guardado = papelGuardado();
+  var esControl = location.hash.indexOf('control') >= 0 || guardado === 'control' ||
+                  (guardado !== 'tele' && pareceCelular());
+  if (location.hash.indexOf('control') >= 0 && guardado !== 'control') {
+    try { localStorage.setItem('cinemas.papel', 'control'); } catch (e) {}
+  }
+  var sala = null;
+  var yo = Math.random().toString(36).slice(2, 10);
+
+  function $(id) { return document.getElementById(id); }
+  function texto(nodo, valor) { if (nodo) nodo.textContent = valor; }
+  function porId(id) {
+    for (var i = 0; i < PLATAFORMAS.length; i++) if (PLATAFORMAS[i].id === id) return PLATAFORMAS[i];
+    return null;
+  }
+  function baseUrl() {
+    if (DIRECCION.indexOf('http') === 0) return DIRECCION.split('#')[0];
+    if (document.referrer && document.referrer.indexOf('http') === 0) return document.referrer.split('#')[0];
+    return location.href.split('#')[0];
+  }
+  function urlControl() { return baseUrl() + '#control'; }
+
+  /* =================================================================
+     Sala en vivo: une la pantalla del televisor con el celular
+     ================================================================= */
+  function abrirSala(alConectar, oyentes) {
+    if (!window.claude || typeof window.claude.use !== 'function') { alConectar(null); return; }
+    window.claude.use('room').then(function (r) {
+      sala = r;
+      if (!r) { alConectar(null); return; }
+      Object.keys(oyentes).forEach(function (tema) {
+        r.on(tema, oyentes[tema], function () { /* canal caído: la página sigue sola */ });
+      });
+      alConectar(r);
+    }).catch(function () { alConectar(null); });
+  }
+  function emitir(tema, datos) {
+    if (!sala) return false;
+    sala.emit(tema, datos).catch(function () {});
+    return true;
+  }
+
+  /* =================================================================
+     PANTALLA DEL TELEVISOR
+     ================================================================= */
+  function iniciarTele() {
+    $('tele').classList.remove('oculto');
+    document.title = 'CINE-MÁS';
+
+    var estado = { foco: 0, vista: 'cartelera', plataforma: null };
+    var clave = sessionStorage.getItem('cinemas.clave');
+    if (!clave || !/^\d{4}$/.test(clave)) {
+      clave = String(Math.floor(1000 + Math.random() * 9000));
+      try { sessionStorage.setItem('cinemas.clave', clave); } catch (e) {}
+    }
+    var fallos = {};
+    var ventanaCine = null;
+    var relojCuenta = null;
+    var avisoCuenta = null;
+    var pendiente = null;
+
+    texto($('claveTele'), clave);
+    texto($('dondeControl'), urlControl().replace(/^https?:\/\//, ''));
+    if (window.QR) window.QR.render($('qrControl'), urlControl(), { ecl: 'M', margin: 1 });
+
+    /* ---------- Cartelera ---------- */
+    var cartelera = $('cartelera');
+    PLATAFORMAS.forEach(function (p, i) {
+      var celda = document.createElement(p.accion ? 'button' : 'a');
+      celda.className = 'titulo';
+      celda.style.background = p.fondo;
+      celda.style.setProperty('--acento', p.acento);
+      if (!p.accion) {
+        celda.href = p.url;
+        celda.target = '_blank';
+        celda.rel = 'noopener';
+      } else {
+        celda.type = 'button';
+      }
+      celda.innerHTML =
+        (p.accion ? '<span class="etiqueta">Celular</span>' : '') +
+        '<span class="marca-logo"><img src="' + p.logo + '" alt="' + p.nombre + '" style="max-width:' + p.escala + '%' +
+        (p.filtro ? ';filter:' + p.filtro + ' drop-shadow(0 6px 20px rgba(0,0,0,.55))' : '') + '"></span>' +
+        '<span class="pie"><span class="nombre">' + p.nombre + '</span>' +
+        '<span class="genero">' + p.genero + '</span></span>';
+      celda.addEventListener('mouseenter', function () { estado.foco = i; pintarFoco(); });
+      celda.addEventListener('click', function (ev) {
+        estado.foco = i;
+        pintarFoco();
+        if (p.accion === 'seeke') { ev.preventDefault(); pantallaSeeke(); return; }
+        recordarVentana(p);
+      });
+      cartelera.appendChild(celda);
+    });
+
+    function pintarFoco() {
+      var celdas = cartelera.children;
+      for (var i = 0; i < celdas.length; i++) celdas[i].classList.toggle('foco', i === estado.foco);
+      estado.plataforma = PLATAFORMAS[estado.foco] ? PLATAFORMAS[estado.foco].id : null;
+      difundir();
+    }
+
+    function mover(dx, dy) {
+      if (estado.vista !== 'cartelera') return;
+      var filas = Math.ceil(PLATAFORMAS.length / COLUMNAS);
+      var col = Math.max(0, Math.min(COLUMNAS - 1, (estado.foco % COLUMNAS) + dx));
+      var fila = Math.max(0, Math.min(filas - 1, Math.floor(estado.foco / COLUMNAS) + dy));
+      var destino = fila * COLUMNAS + col;
+      if (destino < PLATAFORMAS.length) estado.foco = destino;
+      pintarFoco();
+    }
+
+    /* ---------- Abrir plataformas ---------- */
+    function recordarVentana(p) {
+      // El clic ya abrió la pestaña; solo dejamos constancia en la tele.
+      pantallaViendo(p);
+    }
+
+    function prepararVentanaCine() {
+      try { ventanaCine = window.open('about:blank', 'cine-mas-visor'); } catch (e) { ventanaCine = null; }
+      if (ventanaCine && !ventanaCine.closed) {
+        cerrarCapa();
+        avisar('Modo cine activado. Ahora puedes abrir las plataformas desde el celular.');
+      } else {
+        avisar('El navegador bloqueó la ventana. Permite las ventanas emergentes de esta página.');
+      }
+      difundir();
+    }
+
+    function abrirDesdeCelular(p) {
+      if (p.accion === 'seeke') return pantallaSeeke();
+      if (ventanaCine && !ventanaCine.closed) {
+        try {
+          ventanaCine.location.href = p.url;
+          ventanaCine.focus();
+          pantallaViendo(p);
+          return;
+        } catch (e) { ventanaCine = null; }
+      }
+      pantallaPendiente(p);
+    }
+
+    function abrirEnlace(url, desdeCelular) {
+      if (!/^https?:\/\//i.test(url)) return;
+      var falsa = { id: 'enlace', nombre: 'el enlace', genero: url, url: url, logo: 'img/seeke.svg', acento: '#22d3ee' };
+      if (!desdeCelular) { window.open(url, '_blank', 'noopener'); return pantallaViendo(falsa); }
+      if (ventanaCine && !ventanaCine.closed) {
+        try { ventanaCine.location.href = url; ventanaCine.focus(); return pantallaViendo(falsa); } catch (e) { ventanaCine = null; }
+      }
+      pantallaPendiente(falsa);
+    }
+
+    /* ---------- Capas de la tele ---------- */
+    function mostrarLamina(html) {
+      $('lamina').innerHTML = html;
+      $('capa').classList.remove('oculto');
+    }
+    function cerrarCapa() {
+      clearInterval(relojCuenta);
+      relojCuenta = null;
+      pendiente = null;
+      $('capa').classList.add('oculto');
+      $('lamina').innerHTML = '';
+      estado.vista = 'cartelera';
+      difundir();
+    }
+    function avisar(mensaje) {
+      texto($('aviso'), mensaje);
+      $('aviso').classList.remove('oculto');
+      clearTimeout(avisoCuenta);
+      avisoCuenta = setTimeout(function () { $('aviso').classList.add('oculto'); }, 6500);
+    }
+
+    function pantallaPendiente(p) {
+      estado.vista = 'pendiente';
+      pendiente = p;
+      mostrarLamina(
+        '<img class="logo-alto" src="' + p.logo + '" alt="' + p.nombre + '">' +
+        '<h2>' + p.nombre + ' está listo</h2>' +
+        '<p>El navegador solo abre páginas nuevas cuando la orden sale de este equipo, así que dale ' +
+        'al botón o pulsa <kbd>Enter</kbd> aquí. Para abrir desde el celular sin tocar el PC, activa el modo cine ' +
+        'una vez y CINE-MÁS reutilizará esa pestaña.</p>' +
+        '<div class="botonera">' +
+        '<a class="boton destacado" id="irAhora" href="' + p.url + '" target="_blank" rel="noopener">Abrir ' + p.nombre + '</a>' +
+        '<button class="boton" data-hacer="modo-cine" type="button">Activar modo cine</button>' +
+        '<button class="boton" data-hacer="cerrar" type="button">Cancelar</button></div>'
+      );
+      difundir();
+    }
+
+    function pantallaViendo(p) {
+      estado.vista = 'viendo';
+      mostrarLamina(
+        '<img class="logo-alto" src="' + p.logo + '" alt="' + p.nombre + '">' +
+        '<h2>' + p.nombre + ' está abierto</h2>' +
+        '<p>Se abrió en otra pestaña del navegador. Cuando termines, vuelve a esta pestaña; ' +
+        'el menú te está esperando.</p>' +
+        '<div class="botonera">' +
+        (ventanaCine && !ventanaCine.closed
+          ? '<button class="boton destacado" data-hacer="cerrar-ventana" type="button">Cerrar y volver al menú</button>' : '') +
+        '<button class="boton" data-hacer="cerrar" type="button">Volver al menú</button></div>'
+      );
+      difundir();
+    }
+
+    function pantallaSeeke() {
+      estado.vista = 'seeke';
+      mostrarLamina(
+        '<div style="display:flex;align-items:center;gap:16px;margin-bottom:14px">' +
+        '<img src="img/seeke.svg" alt="Seeke" style="height:clamp(32px,2.8vw,54px)">' +
+        '<h2 style="margin:0">Seeke desde tu celular</h2></div>' +
+        '<div class="dos-columnas">' +
+          '<div><div class="qr-grande" id="qrSeeke"></div>' +
+          '<div class="qr-pie">' + urlControl().replace(/^https?:\/\//, '') + '</div></div>' +
+          '<div><ol class="pasos">' +
+            '<li><strong>Escanea el código</strong> con la cámara del celular.</li>' +
+            '<li>El celular abre CINE-MÁS como mando. Si te muestra el menú, toca <strong>Ajustes → Cambiar a mando</strong>.</li>' +
+            '<li>Escribe la contraseña <strong>' + clave + '</strong>.</li>' +
+            '<li>Pega la dirección de Seeke en <strong>Enviar un enlace a la tele</strong> y se abrirá aquí.</li>' +
+          '</ol>' +
+          '<p style="margin-top:14px">También puedes escribirla directamente:</p>' +
+          '<input id="enlaceTele" class="campo" type="url" placeholder="https://…" autocomplete="off">' +
+          '<div class="botonera" style="margin-top:2px">' +
+            '<button class="boton destacado" data-hacer="abrir-enlace" type="button">Abrir en la tele</button>' +
+            '<button class="boton" data-hacer="cerrar" type="button">Volver</button></div>' +
+          '<div class="nota">Para <strong>duplicar la pantalla del celular</strong> en la tele hace falta la versión ' +
+          'que se ejecuta en tu propio equipo, incluida en el repositorio del proyecto: ahí el vídeo viaja directo ' +
+          'del celular al televisor por tu wifi.</div>' +
+          '</div>' +
+        '</div>'
+      );
+      if (window.QR) window.QR.render($('qrSeeke'), urlControl(), { ecl: 'M', margin: 2 });
+      difundir();
+    }
+
+    function pantallaAjustes() {
+      estado.vista = 'ajustes';
+      var enSala = sala ? 'conectada' : 'no disponible en esta ventana';
+      var mandos = contarMandos();
+      mostrarLamina(
+        '<h2>Ajustes</h2>' +
+        '<p>Esta es la versión web de CINE-MÁS: se abre en cualquier PC o laptop, sin instalar nada.</p>' +
+        '<div class="lista-ajustes">' +
+          '<div class="ajuste"><span>Contraseña del control</span>' +
+            '<span><span class="dato" style="font-size:1.5em;letter-spacing:.2em;color:var(--marquesina)">' + clave + '</span>' +
+            ' <button class="boton" data-hacer="nueva-clave" type="button">Cambiar</button></span></div>' +
+          '<div class="ajuste"><span>Conexión con el celular</span><span class="dato">' + enSala + '</span></div>' +
+          '<div class="ajuste"><span>Controles conectados ahora</span><span class="dato">' + mandos + '</span></div>' +
+          '<div class="ajuste"><span>Modo cine (abrir desde el celular)</span>' +
+            '<span>' + (ventanaCine && !ventanaCine.closed ? '<span class="dato">activo</span>'
+              : '<button class="boton" data-hacer="modo-cine" type="button">Activar</button>') + '</span></div>' +
+          '<div class="ajuste"><span>Pantalla completa</span>' +
+            '<span><button class="boton" data-hacer="pantalla-completa" type="button">Activar o salir</button></span></div>' +
+          '<div class="ajuste"><span>Usar este aparato como mando</span>' +
+            '<span><button class="boton" data-hacer="usar-mando" type="button">Cambiar a mando</button></span></div>' +
+        '</div>' +
+        '<div class="nota">El celular tiene que abrir el mismo enlace de esta página y escribir la contraseña. ' +
+        'Si solo quieres manejar la tele con el teclado, puedes ignorar el código QR.</div>' +
+        '<div class="botonera"><button class="boton destacado" data-hacer="cerrar" type="button">Listo</button></div>'
+      );
+      difundir();
+    }
+
+    $('lamina').addEventListener('click', function (ev) {
+      var boton = ev.target.closest('[data-hacer]');
+      if (!boton) return;
+      var hacer = boton.getAttribute('data-hacer');
+      if (hacer === 'cerrar') cerrarCapa();
+      else if (hacer === 'usar-mando') fijarPapel('control');
+      else if (hacer === 'modo-cine') prepararVentanaCine();
+      else if (hacer === 'pantalla-completa') pantallaCompleta();
+      else if (hacer === 'nueva-clave') {
+        clave = String(Math.floor(1000 + Math.random() * 9000));
+        try { sessionStorage.setItem('cinemas.clave', clave); } catch (e) {}
+        fallos = {};
+        texto($('claveTele'), clave);
+        emitir('tele', { de: 'tele', fuera: true });
+        pantallaAjustes();
+      } else if (hacer === 'cerrar-ventana') {
+        try { if (ventanaCine && !ventanaCine.closed) ventanaCine.close(); } catch (e) {}
+        ventanaCine = null;
+        cerrarCapa();
+      } else if (hacer === 'abrir-enlace') {
+        var campo = $('enlaceTele');
+        var url = campo ? campo.value.trim() : '';
+        if (!url) return;
+        if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+        abrirEnlace(url, false);
+      }
+    });
+
+    $('fichaControl').addEventListener('click', pantallaAjustes);
+
+    function pantallaCompleta() {
+      if (document.fullscreenElement) { document.exitFullscreen().catch(function () {}); return; }
+      var intento = document.documentElement.requestFullscreen();
+      if (intento && intento.catch) {
+        intento.catch(function () { avisar('Pulsa la tecla F en este equipo para poner pantalla completa.'); });
+      }
+    }
+
+    /* ---------- Órdenes (teclado y celular) ---------- */
+    function ejecutar(orden, extra) {
+      switch (orden) {
+        case 'arriba': mover(0, -1); break;
+        case 'abajo': mover(0, 1); break;
+        case 'izquierda': mover(-1, 0); break;
+        case 'derecha': mover(1, 0); break;
+        case 'ok': aceptar(extra); break;
+        case 'atras': if (estado.vista !== 'cartelera') cerrarCapa(); break;
+        case 'inicio': cerrarCapa(); break;
+        case 'ajustes': pantallaAjustes(); break;
+        case 'seeke': pantallaSeeke(); break;
+        case 'pantalla-completa': pantallaCompleta(); break;
+        case 'abrir':
+          var p = porId(extra && extra.id);
+          if (!p) break;
+          var i = PLATAFORMAS.indexOf(p);
+          estado.foco = i; pintarFoco();
+          if (extra && extra.gesto) { cartelera.children[i].click(); }
+          else abrirDesdeCelular(p);
+          break;
+        case 'enlace': if (extra && extra.url) abrirEnlace(extra.url, Boolean(extra.remoto)); break;
+      }
+    }
+
+    function aceptar(extra) {
+      if (estado.vista === 'pendiente' && pendiente) {
+        var enlace = $('irAhora');
+        if (enlace) { enlace.click(); pantallaViendo(pendiente); }
+        return;
+      }
+      if (estado.vista !== 'cartelera') return;
+      var p = PLATAFORMAS[estado.foco];
+      if (!p) return;
+      if (p.accion === 'seeke') return pantallaSeeke();
+      if (extra && extra.gesto) cartelera.children[estado.foco].click();
+      else abrirDesdeCelular(p);
+    }
+
+    document.addEventListener('keydown', function (ev) {
+      var mapa = {
+        ArrowUp: 'arriba', ArrowDown: 'abajo', ArrowLeft: 'izquierda', ArrowRight: 'derecha',
+        Enter: 'ok', Escape: 'atras', Backspace: 'atras', Home: 'inicio'
+      };
+      if (ev.target && /^(INPUT|TEXTAREA)$/.test(ev.target.tagName)) {
+        if (ev.key === 'Enter' && ev.target.id === 'enlaceTele') {
+          var url = ev.target.value.trim();
+          if (url) abrirEnlace(/^https?:\/\//i.test(url) ? url : 'https://' + url, false);
+        }
+        return;
+      }
+      var orden = mapa[ev.key];
+      if (!orden && (ev.key === 'f' || ev.key === 'F')) orden = 'pantalla-completa';
+      if (!orden && (ev.key === 's' || ev.key === 'S')) orden = 'ajustes';
+      if (!orden) return;
+      ev.preventDefault();
+      ejecutar(orden, { gesto: true });
+    });
+
+    /* ---------- Sala ---------- */
+    function contarMandos() {
+      if (!sala) return 0;
+      var n = 0;
+      sala.peers().forEach(function (p) { if (p.presence && p.presence.papel === 'mando') n++; });
+      return n;
+    }
+    function difundir() {
+      emitir('tele', {
+        de: 'tele',
+        estado: { foco: estado.foco, vista: estado.vista, plataforma: estado.plataforma },
+        modoCine: Boolean(ventanaCine && !ventanaCine.closed)
+      });
+    }
+    function senal() {
+      var mandos = contarMandos();
+      $('bombilla').classList.toggle('viva', Boolean(sala));
+      texto($('senalTexto'), !sala ? 'sala no disponible'
+        : mandos ? (mandos === 1 ? '1 control conectado' : mandos + ' controles conectados')
+        : 'sala lista');
+    }
+
+    abrirSala(function (r) {
+      senal();
+      if (!r) return;
+      r.presence({ papel: 'tele' });
+      r.onPeers(function () { senal(); difundir(); });
+      setInterval(difundir, 5000);
+      difundir();
+    }, {
+      mando: function (msg) {
+        if (msg.isMe && msg.sameTab) return;
+        var d = msg.data || {};
+        if (d.de !== 'mando') return;
+        var quien = String(d.yo || msg.peer);
+        if ((fallos[quien] || 0) >= 5) {
+          emitir('tele', { de: 'tele', para: quien, respuesta: 'bloqueado' });
+          return;
+        }
+        if (String(d.clave || '') !== clave) {
+          fallos[quien] = (fallos[quien] || 0) + 1;
+          emitir('tele', { de: 'tele', para: quien, respuesta: 'clave-mala' });
+          return;
+        }
+        fallos[quien] = 0;
+        if (d.orden === 'hola') {
+          emitir('tele', { de: 'tele', para: quien, respuesta: 'bienvenido',
+            estado: { foco: estado.foco, vista: estado.vista, plataforma: estado.plataforma } });
+          return;
+        }
+        ejecutar(d.orden, d);
+        emitir('tele', { de: 'tele', para: quien, respuesta: 'hecho', orden: d.orden });
+      }
+    });
+
+    /* ---------- Reloj ---------- */
+    function reloj() {
+      var d = new Date();
+      texto($('hora'), d.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' }));
+      texto($('fecha'), d.toLocaleDateString('es', { weekday: 'long', day: 'numeric', month: 'short' }));
+    }
+    reloj();
+    setInterval(reloj, 15000);
+    pintarFoco();
+  }
+
+  /* =================================================================
+     CONTROL DEL CELULAR
+     ================================================================= */
+  function iniciarControl() {
+    $('control').classList.remove('oculto');
+    document.title = 'CINE-MÁS · Control';
+
+    var clave = '';
+    var dentro = false;
+    var esperandoHola = null;
+
+    var chapas = $('chapas');
+    PLATAFORMAS.forEach(function (p) {
+      var b = document.createElement('button');
+      b.className = 'chapa';
+      b.type = 'button';
+      b.style.setProperty('--acento', p.acento);
+      b.setAttribute('data-id', p.id);
+      b.innerHTML = '<img src="' + p.logo + '" alt="' + p.nombre + '"><span>' + p.nombre + '</span>';
+      b.addEventListener('click', function () {
+        mandar('abrir', { id: p.id });
+        marcar(p.id);
+      });
+      chapas.appendChild(b);
+    });
+
+    function marcar(id) {
+      Array.prototype.forEach.call(chapas.children, function (b) {
+        b.classList.toggle('puesta', b.getAttribute('data-id') === id);
+      });
+      var p = porId(id);
+      if (p) { $('ahoraLogo').src = p.logo; texto($('ahoraNombre'), p.nombre); }
+    }
+
+    function vibrar(ms) { if (navigator.vibrate) { try { navigator.vibrate(ms || 12); } catch (e) {} } }
+
+    function mandar(orden, extra) {
+      if (!dentro && orden !== 'hola') return;
+      var datos = { de: 'mando', yo: yo, clave: clave, orden: orden };
+      if (extra) Object.keys(extra).forEach(function (k) { datos[k] = extra[k]; });
+      if (!emitir('mando', datos)) {
+        recado($('recadoClave'), 'Sin conexión con la tele.', 'malo');
+        return;
+      }
+      vibrar();
+    }
+
+    function recado(nodo, mensaje, tipo) {
+      texto(nodo, mensaje);
+      nodo.className = 'recado' + (tipo ? ' ' + tipo : '');
+    }
+
+    function entrar() {
+      var valor = ($('clave').value || '').trim();
+      if (!/^\d{4}$/.test(valor)) { recado($('recadoClave'), 'Escribe los cuatro números de la tele.', 'malo'); return; }
+      clave = valor;
+      recado($('recadoClave'), 'Comprobando…');
+      mandar('hola');
+      clearTimeout(esperandoHola);
+      esperandoHola = setTimeout(function () {
+        if (!dentro) recado($('recadoClave'), 'La tele no contesta. Comprueba que la pantalla esté abierta en el PC.', 'malo');
+      }, 4000);
+    }
+
+    $('usarComoPantalla').addEventListener('click', function () { fijarPapel('tele'); });
+    $('entrar').addEventListener('click', entrar);
+    $('clave').addEventListener('keydown', function (e) { if (e.key === 'Enter') entrar(); });
+
+    document.addEventListener('click', function (ev) {
+      var b = ev.target.closest('[data-orden]');
+      if (!b) return;
+      mandar(b.getAttribute('data-orden'));
+    });
+
+    $('enviarEnlace').addEventListener('click', function () {
+      var url = ($('enlace').value || '').trim();
+      if (!url) return;
+      if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+      mandar('enlace', { url: url, remoto: true });
+      recado($('recadoEnlace'), 'Enviado a la tele.', 'bien');
+    });
+
+    function pintarEstado(e) {
+      if (!e) return;
+      if (e.plataforma) marcar(e.plataforma);
+      var textos = {
+        cartelera: 'eligiendo en el menú',
+        pendiente: 'esperando un clic en el PC',
+        viendo: 'abierto en la tele',
+        seeke: 'en la pantalla de Seeke',
+        ajustes: 'en los ajustes'
+      };
+      texto($('ahoraDetalle'), textos[e.vista] || 'en el menú principal');
+    }
+
+    function senal(viva, mensaje) {
+      $('bombillaMovil').classList.toggle('viva', Boolean(viva));
+      texto($('senalMovil'), mensaje);
+    }
+
+    abrirSala(function (r) {
+      if (!r) {
+        senal(false, 'sin conexión');
+        recado($('recadoClave'),
+          'Esta ventana no puede conectarse con la tele. Abre el enlace desde la app o la web de Claude con tu cuenta.', 'malo');
+        return;
+      }
+      r.presence({ papel: 'mando' });
+      var hayTele = function () {
+        var visto = false;
+        r.peers().forEach(function (p) { if (p.presence && p.presence.papel === 'tele') visto = true; });
+        senal(visto, visto ? (dentro ? 'control activo' : 'tele encontrada') : 'la tele no está abierta');
+      };
+      r.onPeers(hayTele);
+      hayTele();
+    }, {
+      tele: function (msg) {
+        var d = msg.data || {};
+        if (d.de !== 'tele') return;
+        if (d.fuera) {
+          dentro = false;
+          $('mando').classList.add('oculto');
+          $('acceso').classList.remove('oculto');
+          recado($('recadoClave'), 'La contraseña cambió. Mira la nueva en la tele.', 'malo');
+          return;
+        }
+        if (d.para && d.para !== yo) { if (d.estado) pintarEstado(d.estado); return; }
+        if (d.respuesta === 'clave-mala') { recado($('recadoClave'), 'Contraseña incorrecta.', 'malo'); return; }
+        if (d.respuesta === 'bloqueado') { recado($('recadoClave'), 'Demasiados intentos. Cambia la contraseña en la tele.', 'malo'); return; }
+        if (d.respuesta === 'bienvenido') {
+          dentro = true;
+          clearTimeout(esperandoHola);
+          $('acceso').classList.add('oculto');
+          $('mando').classList.remove('oculto');
+          senal(true, 'control activo');
+          vibrar(30);
+        }
+        if (d.estado) pintarEstado(d.estado);
+      }
+    });
+
+    setTimeout(function () { $('clave').focus(); }, 400);
+  }
+
+  if (esControl) iniciarControl(); else iniciarTele();
+})();
+</script>

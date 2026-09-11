@@ -18,7 +18,42 @@ del celular a la tele con **Seeke**.
 - No necesita internet para funcionar (solo para abrir las plataformas) ni instalar nada:
   **no tiene dependencias**, solo Node.js.
 
-## Cómo se usa
+## Dónde abrirlo
+
+Hay tres formas, de la más cómoda a la más completa.
+
+### 1. La web publicada (nada que instalar)
+
+<https://claude.ai/code/artifact/b341cf93-9cd5-49a3-8a52-9b82c8b7b4c9>
+
+Se abre en cualquier PC o laptop conectado al televisor. Tiene el menú completo con
+sus logos, el reloj, los ajustes y el código QR para manejarla desde el celular: el
+teléfono abre el mismo enlace, se reconoce solo como mando y pide la contraseña que
+sale en la tele.
+
+Dos cosas que solo existen en la versión que corre en tu equipo:
+
+- **Duplicar la pantalla del celular** en la tele. En la web, Seeke sirve para mandar
+  un enlace y que el televisor lo abra.
+- Abrir una plataforma **desde el celular sin tocar el PC**. El navegador solo abre
+  páginas nuevas cuando la orden sale del propio equipo. Para saltarse eso, entra una
+  vez en *Ajustes → Activar modo cine*: CINE-MÁS se queda con una pestaña abierta y
+  luego el celular puede cambiarla de plataforma sin que te levantes.
+
+### 2. En tu equipo, con doble clic
+
+Descarga el proyecto y abre el archivo que corresponda a tu sistema:
+
+| Sistema | Archivo |
+| --- | --- |
+| Windows | `INICIAR-CINE-MAS.bat` |
+| macOS | `iniciar-cine-mas.command` |
+| Linux | `iniciar-cine-mas.sh` |
+
+Arranca el servidor y abre el navegador solo. Así funciona **todo**: el control por QR
+y Seeke duplicando la pantalla del celular en el televisor.
+
+### 3. Desde la terminal
 
 ```bash
 node server.js
@@ -92,6 +127,14 @@ CINEMAS_TV_HOSTS=192.168.1.60 node server.js   # solo ese equipo
 CINEMAS_TV_HOSTS='*' node server.js            # cualquier equipo de tu red
 ```
 
+### Publicarlo en GitHub Pages
+
+El repositorio trae el flujo `.github/workflows/pages.yml`. Cuando estos cambios lleguen
+a la rama `main`, GitHub publica la carpeta `public/` y te da una dirección pública.
+Ese sitio funciona en **modo web**: menú, teclado y ratón, sin control por celular,
+porque en un hosting estático no hay servidor detrás. La propia página lo avisa y
+explica cómo recuperar el mando.
+
 ### Cambiar las direcciones de las plataformas
 
 Están en `public/js/platforms.js`, en el campo `url` de cada una. Ahí también puedes
@@ -128,6 +171,7 @@ No lo publiques en internet: está hecho para el wifi de casa.
 
 ```
 server.js              servidor web + WebSocket + señalización WebRTC
+web/artefacto.html     versión publicada como página, con mando en vivo
 lib/ws.js              servidor WebSocket propio (sin dependencias)
 lib/selfsigned.js      certificado HTTPS autofirmado hecho en Node puro
 public/index.html      pantalla del televisor

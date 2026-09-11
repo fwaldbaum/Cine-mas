@@ -364,6 +364,7 @@
   /* ---------------- Ajustes ---------------- */
   function abrirAjustes() {
     state.screen = 'ajustes';
+    if (state.modoWeb) return ajustesModoWeb();
     var info = state.info || {};
     var direcciones = info.addresses || [];
     var modo = localStorage.getItem('cinemas.modoApertura') || 'ventana';
@@ -391,6 +392,18 @@
       (modo === 'ventana' ? '<div class="aviso">Permite las ventanas emergentes para esta página: así CINE-MÁS ' +
         'sigue abierto detrás y puedes volver al menú desde el celular. Si el navegador las bloquea, la ' +
         'plataforma se abrirá en esta misma pestaña y tendrás que usar el botón Atrás del navegador.</div>' : '') +
+      '<div class="acciones"><button class="boton primario" data-accion="inicio">Listo</button></div>'
+    );
+    publishState();
+  }
+
+  function ajustesModoWeb() {
+    mostrarPanel(
+      '<h2>Modo web</h2>' +
+      '<p>Esta copia de CINE-MÁS está publicada como página, así que funciona con el teclado y el ratón ' +
+      'del equipo, pero no puede hablar con tu celular.</p>' +
+      '<p>Para recuperar el control por QR y el envío de pantalla con Seeke, descarga el proyecto y arranca ' +
+      'en tu equipo <strong>node server.js</strong>. Después abre <strong>http://localhost:8123/</strong>.</p>' +
       '<div class="acciones"><button class="boton primario" data-accion="inicio">Listo</button></div>'
     );
     publishState();
@@ -461,6 +474,22 @@
   }
 
   /* ---------------- Cabecera ---------------- */
+  // Sin servidor detras (por ejemplo en un hosting estatico) el menu sigue
+  // funcionando con teclado y raton, pero sin control desde el celular.
+  function modoWeb() {
+    state.modoWeb = true;
+    state.screen = 'home';
+    el.remoteQr.innerHTML =
+      '<svg viewBox="0 0 24 24" style="width:100%;height:100%" aria-hidden="true">' +
+      '<rect width="24" height="24" rx="4" fill="#0c0e16"></rect>' +
+      '<path d="M7 9.5h10M7 12h10M7 14.5h6" stroke="#f5c451" stroke-width="1.6" stroke-linecap="round"></path></svg>';
+    el.remoteUrl.textContent = 'esta copia se abre sin servidor';
+    el.remotePin.textContent = '—';
+    el.remoteCard.title = 'Para controlar la tele desde el celular, arranca CINE-MÁS en tu equipo con: node server.js';
+    document.querySelector('.remote-title').textContent = 'Modo web · sin control por celular';
+    estado(false, 'modo web');
+  }
+
   function pintarCabecera() {
     var url = remoteUrl();
     if (url) {
@@ -489,6 +518,7 @@
   }
 
   function publishState(extra) {
+    if (state.modoWeb) return;
     enviar({
       t: 'state',
       screen: extra || state.screen,
@@ -626,14 +656,18 @@
     estado(false, 'conectando…');
 
     fetch('api/info')
-      .then(function (r) { return r.json(); })
+      .then(function (r) {
+        if (!r.ok) throw new Error('sin servidor');
+        return r.json();
+      })
       .then(function (info) {
+        if (!info || typeof info.httpPort !== 'number') throw new Error('sin servidor');
         state.info = info;
         if (info.pin) state.pin = info.pin;
         pintarCabecera();
+        conectar();
       })
-      .catch(function () { el.remoteUrl.textContent = 'no se pudo leer la red'; })
-      .then(conectar);
+      .catch(modoWeb);
   }
 
   iniciar();

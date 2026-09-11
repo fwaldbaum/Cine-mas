@@ -24,7 +24,12 @@ Hay tres formas, de la más cómoda a la más completa.
 
 ### 1. La web publicada (nada que instalar)
 
-<https://claude.ai/code/artifact/b341cf93-9cd5-49a3-8a52-9b82c8b7b4c9>
+- **Con control desde el celular:**
+  <https://claude.ai/code/artifact/b341cf93-9cd5-49a3-8a52-9b82c8b7b4c9>
+- **Pública, sin cuenta y sin control por celular:**
+  <https://fwaldbaum.github.io/Cine-mas/>
+
+La primera es la completa de las dos.
 
 Se abre en cualquier PC o laptop conectado al televisor. Tiene el menú completo con
 sus logos, el reloj, los ajustes y el código QR para manejarla desde el celular: el
@@ -127,13 +132,19 @@ CINEMAS_TV_HOSTS=192.168.1.60 node server.js   # solo ese equipo
 CINEMAS_TV_HOSTS='*' node server.js            # cualquier equipo de tu red
 ```
 
-### Publicarlo en GitHub Pages
+### El sitio de GitHub Pages
 
-El repositorio trae el flujo `.github/workflows/pages.yml`. Cuando estos cambios lleguen
-a la rama `main`, GitHub publica la carpeta `public/` y te da una dirección pública.
-Ese sitio funciona en **modo web**: menú, teclado y ratón, sin control por celular,
-porque en un hosting estático no hay servidor detrás. La propia página lo avisa y
-explica cómo recuperar el mando.
+<https://fwaldbaum.github.io/Cine-mas/>
+
+GitHub publica el repositorio tal cual, así que la raíz te lleva al menú y el archivo
+`.nojekyll` evita que GitHub intente convertirlo en un blog. Ese sitio funciona en
+**modo web**: menú, teclado y ratón, sin control por celular, porque en un hosting
+estático no hay servidor detrás. La propia página lo avisa y explica cómo recuperar
+el mando.
+
+El flujo `.github/workflows/pages.yml` queda a mano (*Actions → Run workflow*) por si
+algún día prefieres cambiar el origen de Pages a *GitHub Actions* y publicar solo la
+carpeta `public/`.
 
 ### Cambiar las direcciones de las plataformas
 

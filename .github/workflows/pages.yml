@@ -1,8 +1,10 @@
 name: Publicar CINE-MÁS en GitHub Pages
 
+# GitHub Pages está sirviendo el repositorio directamente desde la rama
+# principal, así que este flujo no hace falta para el día a día y por eso
+# solo se lanza a mano. Sirve para cuando quieras cambiar el origen de Pages
+# a "GitHub Actions" y publicar únicamente la carpeta public/.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:

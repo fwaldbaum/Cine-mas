@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07080d">
+<title>Seeke · CINE-MÁS</title>
+<link rel="icon" href="img/seeke.svg">
+<link rel="stylesheet" href="css/remote.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="logo-mini">
+      <img src="img/seeke.svg" alt="Seeke" style="height:28px">
+    </div>
+    <div class="estado"><span class="punto" id="punto"></span><span id="estadoTexto">conectando…</span></div>
+  </header>
+
+  <section id="bloqueado" class="tarjeta oculto">
+    <h2>Código no válido</h2>
+    <p id="motivoBloqueo">Vuelve a escanear el código QR que aparece en la tele.</p>
+  </section>
+
+  <section id="principal" class="oculto">
+
+    <div id="avisoSeguro" class="aviso malo oculto" style="margin-bottom:14px"></div>
+
+    <div class="tarjeta">
+      <h2>Manda tu pantalla a la tele</h2>
+      <p>Lo que veas en el celular se verá en el televisor, en la pantalla de Seeke.</p>
+      <video id="previo" class="previo oculto" playsinline autoplay muted></video>
+      <div class="fila" id="botonesCaptura">
+        <button class="btn primario" id="btnPantalla">Compartir pantalla</button>
+        <button class="btn" id="btnCamara">Compartir cámara</button>
+      </div>
+      <button class="btn fantasma oculto" id="btnParar" style="margin-top:10px">Dejar de compartir</button>
+      <div class="error" id="mensaje"></div>
+    </div>
+
+    <div class="tarjeta">
+      <h2>Abrir Seeke en la tele</h2>
+      <p>Si prefieres ver Seeke directamente en el televisor, pega aquí su dirección.</p>
+      <input id="enlace" class="campo" type="url" inputmode="url" placeholder="https://…" autocomplete="off">
+      <button class="btn" id="enviarEnlace">Abrir en la tele</button>
+      <div class="error" id="mensajeEnlace"></div>
+    </div>
+
+    <div class="nota" id="notaAyuda"></div>
+  </section>
+
+</div>
+
+<script src="js/share.js"></script>
+</body>
+</html>

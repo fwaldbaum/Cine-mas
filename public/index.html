@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CINE-MÁS</title>
+<link rel="icon" href="img/seeke.svg">
+<link rel="stylesheet" href="css/tv.css">
+</head>
+<body class="tv">
+
+<div id="app">
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-icon" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <rect x="3" y="16" width="42" height="32" rx="7" fill="#f5c451"/>
+        <rect x="9" y="22" width="8" height="8" rx="2" fill="#05060a"/>
+        <rect x="9" y="34" width="8" height="8" rx="2" fill="#05060a"/>
+        <rect x="31" y="22" width="8" height="8" rx="2" fill="#05060a"/>
+        <rect x="31" y="34" width="8" height="8" rx="2" fill="#05060a"/>
+        <path d="M45 32 L61 22 V42 Z" fill="#e50914"/>
+      </svg>
+      <div>
+        <h1>CINE<span style="opacity:.5">-</span>MÁS</h1>
+        <span class="tagline">TU CINE EN CASA</span>
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <div class="clock" id="clock"><span id="clockTime">--:--</span><small id="clockDate"></small></div>
+      <div class="remote-card" id="remoteCard" title="Escanea para controlar la tele desde el celular">
+        <div class="qr" id="remoteQr"></div>
+        <div class="remote-info">
+          <div class="remote-title">Controla desde tu celular</div>
+          <div class="remote-url" id="remoteUrl">buscando la red…</div>
+          <div class="remote-pin">Contraseña <strong id="remotePin">····</strong></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="grid" id="grid" aria-label="Plataformas"></main>
+
+  <footer class="hints">
+    <span><kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd><kbd>↓</kbd> Moverse</span>
+    <span><kbd>Enter</kbd> Abrir</span>
+    <span><kbd>Esc</kbd> Volver</span>
+    <span><kbd>F</kbd> Pantalla completa</span>
+    <span><kbd>S</kbd> Ajustes</span>
+    <span class="spacer"></span>
+    <span class="status"><span class="dot" id="statusDot"></span><span id="statusText">conectando…</span></span>
+  </footer>
+</div>
+
+<video id="remoteVideo" playsinline autoplay hidden></video>
+<div class="sharing-badge" id="sharingBadge" hidden>Seeke · compartiendo desde el celular · <kbd>Esc</kbd> para salir</div>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="panel" id="panel"></div>
+</div>
+
+<script src="js/qr.js"></script>
+<script src="js/platforms.js"></script>
+<script src="js/tv.js"></script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+/* CINE-MÁS — control remoto y pantalla para compartir (celular) */
+:root {
+  --fondo: #07080d;
+  --panel: rgba(255, 255, 255, 0.06);
+  --borde: rgba(255, 255, 255, 0.13);
+  --texto: #f4f6fb;
+  --suave: rgba(244, 246, 251, 0.6);
+  --oro: #f5c451;
+  --verde: #35d07f;
+  --rojo: #e5484d;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background:
+    radial-gradient(700px 420px at 50% -8%, rgba(229, 9, 20, 0.2), transparent 65%),
+    radial-gradient(600px 420px at 100% 110%, rgba(34, 211, 238, 0.14), transparent 65%),
+    var(--fondo);
+  color: var(--texto);
+  font-family: Inter, 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  padding: max(14px, env(safe-area-inset-top)) 14px max(18px, env(safe-area-inset-bottom));
+  min-height: 100%;
+  overscroll-behavior: none;
+}
+.wrap { max-width: 520px; margin: 0 auto; }
+
+header.top {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-bottom: 16px;
+}
+.logo-mini { display: flex; align-items: center; gap: 9px; }
+.logo-mini svg { width: 30px; height: 30px; }
+.logo-mini b {
+  font-size: 17px; letter-spacing: 3px; font-weight: 800;
+  background: linear-gradient(100deg, #fff, var(--oro) 60%, #e50914);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.estado { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--suave); }
+.punto { width: 9px; height: 9px; border-radius: 50%; background: var(--rojo); }
+.punto.on { background: var(--verde); box-shadow: 0 0 10px rgba(53, 208, 127, 0.8); }
+
+.tarjeta {
+  background: var(--panel);
+  border: 1px solid var(--borde);
+  border-radius: 20px;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+.tarjeta h2 { margin: 0 0 6px; font-size: 17px; }
+.tarjeta p { margin: 0 0 14px; color: var(--suave); font-size: 13.5px; line-height: 1.55; }
+
+/* ---------- Acceso con contraseña ---------- */
+.pin-campo {
+  width: 100%;
+  font-size: 40px;
+  letter-spacing: 16px;
+  text-align: center;
+  padding: 16px 0 16px 16px;
+  border-radius: 16px;
+  border: 2px solid var(--borde);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--texto);
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
+}
+.pin-campo:focus { outline: none; border-color: var(--oro); }
+.error { color: #ff9ca0; font-size: 13.5px; margin-top: 10px; min-height: 18px; }
+
+.btn {
+  display: block; width: 100%;
+  border: 1px solid var(--borde);
+  background: var(--panel);
+  color: var(--texto);
+  font: inherit; font-weight: 600; font-size: 16px;
+  padding: 15px; border-radius: 15px; cursor: pointer;
+  transition: transform 0.08s, background 0.15s;
+}
+.btn:active { transform: scale(0.975); }
+.btn.primario { background: var(--oro); color: #1a1405; border-color: transparent; }
+.btn.fantasma { background: transparent; }
+.btn[disabled] { opacity: 0.45; }
+
+/* ---------- Plataformas ---------- */
+.plataformas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.plat {
+  position: relative;
+  border: 1px solid var(--borde);
+  border-radius: 16px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+  color: var(--texto);
+  padding: 12px 6px 9px;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  cursor: pointer;
+  transition: transform 0.08s, border-color 0.2s, box-shadow 0.2s;
+}
+.plat:active { transform: scale(0.96); }
+.plat.activa { border-color: var(--acento, #fff); box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1), 0 10px 30px -14px var(--acento, #000); }
+.plat img { height: 30px; max-width: 84%; object-fit: contain; }
+.plat span { font-size: 11px; color: var(--texto); opacity: 0.75; text-align: center; line-height: 1.25; }
+.plat.activa span { opacity: 1; }
+
+/* ---------- Cruceta ---------- */
+.dpad {
+  position: relative;
+  width: min(74vw, 290px);
+  aspect-ratio: 1 / 1;
+  margin: 4px auto 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--borde);
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  place-items: stretch;
+}
+.dpad button {
+  border: none; background: transparent; color: var(--texto);
+  font: inherit; font-size: 26px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 14px;
+}
+.dpad button:active { background: rgba(255, 255, 255, 0.12); }
+.dpad .arriba { grid-area: 1 / 2; }
+.dpad .izq { grid-area: 2 / 1; }
+.dpad .ok {
+  grid-area: 2 / 2;
+  border-radius: 50%;
+  background: var(--oro); color: #1a1405;
+  font-size: 17px; font-weight: 800; letter-spacing: 1px;
+  margin: 8px;
+  box-shadow: 0 10px 26px -12px rgba(245, 196, 81, 0.9);
+}
+.dpad .der { grid-area: 2 / 3; }
+.dpad .abajo { grid-area: 3 / 2; }
+
+.fila { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.fila.tres { grid-template-columns: repeat(3, 1fr); }
+
+.ahora {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px; border-radius: 15px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--borde);
+  margin-bottom: 14px;
+}
+.ahora img { height: 24px; max-width: 110px; object-fit: contain; }
+.ahora div { font-size: 13px; color: var(--suave); }
+.ahora b { display: block; color: var(--texto); font-size: 15px; }
+
+.campo {
+  width: 100%; font: inherit; font-size: 15px;
+  padding: 13px 14px; border-radius: 14px;
+  border: 1px solid var(--borde);
+  background: rgba(0, 0, 0, 0.35); color: var(--texto);
+  margin-bottom: 10px;
+}
+.campo:focus { outline: none; border-color: var(--oro); }
+.nota { font-size: 12.5px; color: var(--suave); line-height: 1.55; margin-top: 10px; }
+.oculto { display: none !important; }
+
+video.previo {
+  width: 100%; border-radius: 16px; background: #000;
+  aspect-ratio: 16 / 9; object-fit: contain; margin-bottom: 12px;
+}
+.aviso {
+  padding: 13px 15px; border-radius: 14px;
+  border: 1px solid rgba(245, 196, 81, 0.4);
+  background: rgba(245, 196, 81, 0.08);
+  color: #ffe3a3; font-size: 13px; line-height: 1.6;
+}
+.aviso.malo { border-color: rgba(229, 72, 77, 0.5); background: rgba(229, 72, 77, 0.1); color: #ffc3c5; }
+.aviso.bien { border-color: rgba(53, 208, 127, 0.5); background: rgba(53, 208, 127, 0.1); color: #b6f2d2; }

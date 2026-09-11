@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#07080d">
+<title>CINE-MÁS · Control</title>
+<link rel="icon" href="img/seeke.svg">
+<link rel="stylesheet" href="css/remote.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="logo-mini">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <rect x="3" y="16" width="42" height="32" rx="7" fill="#f5c451"/>
+        <rect x="9" y="22" width="8" height="8" rx="2" fill="#07080d"/>
+        <rect x="9" y="34" width="8" height="8" rx="2" fill="#07080d"/>
+        <rect x="31" y="22" width="8" height="8" rx="2" fill="#07080d"/>
+        <rect x="31" y="34" width="8" height="8" rx="2" fill="#07080d"/>
+        <path d="M45 32 L61 22 V42 Z" fill="#e50914"/>
+      </svg>
+      <b>CINE-MÁS</b>
+    </div>
+    <div class="estado"><span class="punto" id="punto"></span><span id="estadoTexto">conectando…</span></div>
+  </header>
+
+  <!-- Acceso -->
+  <section id="acceso" class="tarjeta">
+    <h2>Contraseña</h2>
+    <p>Escribe los números que aparecen en la pantalla del televisor.</p>
+    <input id="pin" class="pin-campo" type="text" inputmode="numeric" pattern="[0-9]*"
+           maxlength="8" autocomplete="one-time-code" placeholder="····">
+    <div class="error" id="errorPin"></div>
+    <button class="btn primario" id="entrar" style="margin-top:8px">Entrar</button>
+  </section>
+
+  <!-- Control -->
+  <section id="control" class="oculto">
+    <div class="ahora" id="ahora">
+      <img id="ahoraLogo" src="img/seeke.svg" alt="">
+      <div><b id="ahoraNombre">CINE-MÁS</b><span id="ahoraDetalle">en el menú principal</span></div>
+    </div>
+
+    <div class="tarjeta">
+      <h2>Plataformas</h2>
+      <p>Toca una para abrirla en la tele.</p>
+      <div class="plataformas" id="plataformas"></div>
+    </div>
+
+    <div class="tarjeta">
+      <h2>Mando</h2>
+      <div class="dpad">
+        <button class="arriba" data-cmd="up" aria-label="Arriba">▲</button>
+        <button class="izq" data-cmd="left" aria-label="Izquierda">◀</button>
+        <button class="ok" data-cmd="ok">OK</button>
+        <button class="der" data-cmd="right" aria-label="Derecha">▶</button>
+        <button class="abajo" data-cmd="down" aria-label="Abajo">▼</button>
+      </div>
+      <div class="fila tres">
+        <button class="btn" data-cmd="back">Atrás</button>
+        <button class="btn" data-cmd="home">Inicio</button>
+        <button class="btn" data-cmd="pantalla-completa">Pantalla</button>
+      </div>
+      <div class="fila" style="margin-top:10px">
+        <button class="btn fantasma" data-cmd="cerrar-ventana">Cerrar y volver</button>
+        <button class="btn fantasma" data-cmd="ajustes">Ajustes</button>
+      </div>
+    </div>
+
+    <div class="tarjeta">
+      <h2>Enviar un enlace a la tele</h2>
+      <p>Pega la dirección de Seeke o de cualquier página y se abrirá en el televisor.</p>
+      <input id="enlace" class="campo" type="url" inputmode="url" placeholder="https://…" autocomplete="off">
+      <button class="btn" id="enviarEnlace">Abrir en la tele</button>
+      <div class="error" id="mensajeEnlace"></div>
+    </div>
+  </section>
+
+</div>
+
+<script src="js/platforms.js"></script>
+<script src="js/remote.js"></script>
+</body>
+</html>

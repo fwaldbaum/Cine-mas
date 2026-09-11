@@ -1,0 +1,14 @@
+{
+  "name": "cine-mas",
+  "version": "1.0.0",
+  "description": "CINE-MÁS: selector de plataformas de películas para el cine de casa, con control desde el celular por QR y pantalla compartida (Seeke).",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "private": true,
+  "license": "MIT"
+}
